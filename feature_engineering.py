@@ -16,8 +16,20 @@ dtypes = {
         'click_id'      : 'uint32',
         'hour'          : 'uint8'
         }
+path = 'input/'
 
-train_df = pd.read_csv("train_sample.csv", dtype=dtypes, usecols=['ip','app','device','os', 'channel', 'click_time', 'is_attributed'])
+
+print('loading train data...')
+train_df = pd.read_csv(path+"train.csv", skiprows=range(1,144903891), nrows=40000000, dtype=dtypes, usecols=['ip','app','device','os', 'channel', 'click_time', 'is_attributed'])
+
+print('loading test data...')
+test_df = pd.read_csv(path+"test.csv", dtype=dtypes, usecols=['ip','app','device','os', 'channel', 'click_time', 'click_id'])
+
+len_train = len(train_df)
+train_df=train_df.append(test_df)
+
+del test_df
+gc.collect()
 
 print('Extracting new features...')
 train_df['hour'] = pd.to_datetime(train_df.click_time).dt.hour.astype('uint8')
@@ -145,4 +157,7 @@ print("\nAll features: ")
 for key in train_df.keys(): print(key)
 print("length: %d" % (len(train_df.keys())-2))
 
-train_df.to_csv("train_sample_feature_engineering.csv",index=False)
+test_df = train_df[len_train:]
+train_df = train_df[:len_train]
+train_df.to_csv("train_feature_engineering.csv",index=False)
+test_df.to_csv("test_feature_engineering.csv",index=False)
