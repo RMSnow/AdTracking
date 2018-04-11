@@ -51,15 +51,58 @@ eg: temporal interval
 
 ## Experiments
 
+### Performance
+
 | Category |                 Features                 |   AUC on dev set   | AUC on test set |
 | :------: | :--------------------------------------: | :----------------: | :-------------: |
-|    1     |                 Basic #5                 | 0.974860783943336  |     0.9684      |
+|    1     |                 Basic #5                 |                    |                 |
+|          |                 "Basic"                  | 0.974860783943336  |     0.9684      |
 |   1,2    |                Add count                 | 0.9759619912016608 |                 |
 |   1,2    |           Add attributed count           | 0.9840863114093297 |     0.6239      |
-|   1,2    |           Add attributed count (no hour's effect)          | 0.9840863114093297 |     0.6114      |
+|   1,2    | Add attributed count (no hour's effect)  | 0.9840863114093297 |     0.6114      |
 |   1,2    |      Add count and attributed count      | 0.9842108186300558 |                 |
 |   1,3    |              Add Frequency               | 0.9759619912016608 |                 |
 |  1,2,3   |  Add count, attributed count, frequency  | 0.9843591094736229 |                 |
+|   1,4    |        Add count, conversion rate        |                    |                 |
 | 1,2,3,4  | Add count, attributed count, frequency, conversion | 0.9842607399131638 |                 |
-|          |              Add hour count              | 0.975100704348888  |                 |
-|          |      Add hour attributed count auc       | 0.9952688459421872 |     0.7051      |
+|   1,6    |              Add hour count              | 0.975100704348888  |                 |
+|   1,6    |      Add hour attributed count auc       | 0.9952688459421872 |     0.7051      |
+|   1,5    |             Add correlation              |                    |                 |
+
+### Correlations of features
+
+#### Mutual Information
+
+`Normalized corr_rate = I(X;Y) / H(X,Y) = I(X;Y) / (H(X) + H(Y) - I(X;Y))`
+
+Mask = 0.1
+
+```
+app & channel: 0.269795263371
+app & ip_channel: 0.104454990715
+app & device_channel: 0.263802502515
+app & os_channel: 0.174031886398
+
+channel & ip_app: 0.105000757011
+channel & app_device: 0.256371969166
+channel & app_os: 0.148765039685
+
+ip_app & device_channel: 0.109073593121
+ip_app & os_channel: 0.150919655929
+
+ip_channel & app_device: 0.105314833255
+ip_channel & app_os: 0.136361783362
+
+app_device & os_channel: 0.169265661127
+
+app_os & device_channel: 0.149640128183
+```
+
+Mask = 0.2
+
+```
+app & channel: 0.269795263371
+app & device_channel: 0.263802502515
+
+channel & app_device: 0.256371969166
+```
