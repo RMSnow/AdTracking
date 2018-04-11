@@ -55,10 +55,11 @@ eg: temporal interval
 | :------: | :--------------------------------------: | :----------------: | :-------------: |
 |    1     |                 Basic #5                 | 0.974860783943336  |     0.9684      |
 |   1,2    |                Add count                 | 0.9759619912016608 |                 |
-|   1,2    |           Add attributed count           | 0.9840863114093297 |     0.6114      |
+|   1,2    |           Add attributed count           | 0.9840863114093297 |     0.6239      |
+|   1,2    |           Add attributed count (no hour's effect)          | 0.9840863114093297 |     0.6114      |
 |   1,2    |      Add count and attributed count      | 0.9842108186300558 |                 |
 |   1,3    |              Add Frequency               | 0.9759619912016608 |                 |
 |  1,2,3   |  Add count, attributed count, frequency  | 0.9843591094736229 |                 |
 | 1,2,3,4  | Add count, attributed count, frequency, conversion | 0.9842607399131638 |                 |
 |          |              Add hour count              | 0.975100704348888  |                 |
-|          |      Add hour attributed count auc       | 0.9952688459421872 |     0.6239      |
+|          |      Add hour attributed count auc       | 0.9952688459421872 |     0.7051      |
