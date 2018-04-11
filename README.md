@@ -53,21 +53,23 @@ eg: temporal interval
 
 ### Performance
 
-| Category |                 Features                 |   AUC on dev set   | AUC on test set |
-| :------: | :--------------------------------------: | :----------------: | :-------------: |
-|    1     |                 Basic #5                 |                    |                 |
-|          |                 "Basic"                  | 0.974860783943336  |     0.9684      |
-|   1,2    |                Add count                 | 0.9759619912016608 |                 |
-|   1,2    |           Add attributed count           | 0.9840863114093297 |     0.6239      |
-|   1,2    | Add attributed count (no hour's effect)  | 0.9840863114093297 |     0.6114      |
-|   1,2    |      Add count and attributed count      | 0.9842108186300558 |                 |
-|   1,3    |              Add Frequency               | 0.9759619912016608 |                 |
-|  1,2,3   |  Add count, attributed count, frequency  | 0.9843591094736229 |                 |
-|   1,4    |        Add count, conversion rate        |                    |                 |
-| 1,2,3,4  | Add count, attributed count, frequency, conversion | 0.9842607399131638 |                 |
-|   1,6    |              Add hour count              | 0.975100704348888  |                 |
-|   1,6    |      Add hour attributed count auc       | 0.9952688459421872 |     0.7051      |
-|   1,5    |             Add correlation              |                    |                 |
+| Category |                      Features                      |     AUC on dev set     | AUC on test set |
+| :------: | :------------------------------------------------: | :--------------------: | :-------------: |
+|    1     |                      Basic #5                      | **0.9774025893305988** |     0.9583      |
+|    1     |                  Basic #6 (hour)                   |   0.9765065318797589   |     0.9563      |
+|          |                      "Basic"                       |   0.974860783943336    |     0.9684      |
+|   1,2    |                     Add count                      |   0.9759619912016608   |                 |
+|   1,2    |                Add attributed count                |   0.9840863114093297   |     0.6239      |
+|   1,2    |      Add attributed count (no hour's effect)       |   0.9840863114093297   |     0.6114      |
+|   1,2    |           Add count and attributed count           |   0.9842108186300558   |                 |
+|   1,3    |                   Add Frequency                    |   0.9759619912016608   |                 |
+|  1,2,3   |       Add count, attributed count, frequency       |   0.9843591094736229   |                 |
+|   1,4    |             Add count, conversion rate             |                        |                 |
+| 1,2,3,4  | Add count, attributed count, frequency, conversion |   0.9842607399131638   |                 |
+|   1,6    |                   Add hour count                   |   0.975100704348888    |                 |
+|   1,6    |           Add hour attributed count auc            |   0.9952688459421872   |     0.7051      |
+|   1,5    |                   Add ip_channel                   |   0.979456127558631    |     0.9622      |
+|   1,5    |                  Add app_channel                   |   0.9783578247039497   |                 |
 
 ### Correlations of features
 
