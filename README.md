@@ -69,7 +69,7 @@ eg: temporal interval
 |   1,6    |                   Add hour count                   |   0.975100704348888    |                 |
 |   1,6    |           Add hour attributed count auc            |   0.9952688459421872   |     0.7051      |
 |   1,5    |                   Add ip_channel                   |   0.979456127558631    |     0.9622      |
-|   1,5    |                  Add app_channel                   |   0.9783578247039497   |                 |
+|   1,5    |                  Add app_channel                   |   0.9783578247039497   |     0.9592      |
 
 ### Correlations of features
 
