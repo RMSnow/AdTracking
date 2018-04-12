@@ -108,3 +108,92 @@ app & device_channel: 0.263802502515
 
 channel & app_device: 0.256371969166
 ```
+
+Mask = 0
+
+```
+ip & app: 0.00927286991461
+ip & device: 0.00694314823037
+ip & os: 0.0295303991247
+ip & channel: 0.01910882176
+ip & app_device: 0.0116509685587
+ip & app_os: 0.0352817805537
+ip & app_channel: 0.0269119027086
+ip & device_os: 0.0319996095279
+ip & device_channel: 0.0232395465844
+ip & os_channel: 0.0687097193232
+ip & hour: 0.00842828568901
+
+app & device: 0.0278221472785
+app & os: 0.0138230238585
+app & channel: 0.269795263371
+app & ip_device: 0.0147259939819
+app & ip_os: 0.0259135610616
+app & ip_channel: 0.104454990715
+app & device_os: 0.0146956128532
+app & device_channel: 0.263802502515
+app & os_channel: 0.174031886398
+app & hour: 0.00196613604054
+
+device & os: 0.0292843937519
+device & channel: 0.0190570407725
+device & ip_app: 0.010875061967
+device & ip_os: 0.0123530449439
+device & ip_channel: 0.0109356373285
+device & app_os: 0.0164432432512
+device & app_channel: 0.0215004570006
+device & os_channel: 0.0157067148459
+device & hour: 0.00218613697383
+
+os & channel: 0.0111228058317
+os & ip_app: 0.0392854321075
+os & ip_device: 0.036077091733
+os & ip_channel: 0.0587870031998
+os & app_device: 0.0155230901264
+os & app_channel: 0.0127829864518
+os & device_channel: 0.0152616221357
+os & hour: 0.000521350840747
+
+channel & ip_app: 0.105000757011
+channel & ip_device: 0.0241785886481
+channel & ip_os: 0.0498727607888
+channel & app_device: 0.256371969166
+channel & app_os: 0.148765039685
+channel & device_os: 0.0125333204848
+channel & hour: 0.00297988945705
+
+ip_app & device_os: 0.0420245202447
+ip_app & device_channel: 0.109073593121
+ip_app & os_channel: 0.150919655929
+ip_app & hour: 0.0116179491756
+
+ip_device & app_os: 0.0412224118725
+ip_device & app_channel: 0.0327801472947
+ip_device & os_channel: 0.0755055123239
+ip_device & hour: 0.00926587918155
+
+ip_os & app_device: 0.0292665954443
+ip_os & app_channel: 0.0654641563309
+ip_os & device_channel: 0.0560870467462
+ip_os & hour: 0.0302603369959
+
+ip_channel & app_device: 0.105314833255
+ip_channel & app_os: 0.136361783362
+ip_channel & device_os: 0.0618911697116
+ip_channel & hour: 0.0232839554938
+
+app_device & os_channel: 0.169265661127
+app_device & hour: 0.00226247457287
+
+app_os & device_channel: 0.149640128183
+app_os & hour: 0.00113844687176
+
+app_channel & device_os: 0.0147866713056
+app_channel & hour: 0.00478454682739
+
+device_os & hour: 0.000885698518659
+
+device_channel & hour: 0.00329861922203
+
+os_channel & hour: 0.00227965522251
+```
