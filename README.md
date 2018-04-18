@@ -70,10 +70,10 @@ eg: temporal interval
 | 13   |   1,6    |           Add hour attributed count auc            | 0.9952688459421872 |     0.7051      |
 | 14   |   1,5    |                   Add ip_channel                   | 0.979456127558631  |     0.9622      |
 | 15   |   1,5    |                  Add app_channel                   | 0.9783578247039497 |     0.9592      |
-| 16   |   1,5    |                   Add ip_device                    |                    |     0.9628      |
-| 17   |   1,5    |           Add All two degree of features           |                    |     0.9646      |
+| 16   |   1,5    |                   Add ip_device                    | 0.9801894479874732 |     0.9628      |
+| 17   |   1,5    |           Add All two degree of features           | 0.9813457066441867 |     0.9646      |
 | 18   |   1,5    |    Add All two degree of features(100,000,000)     |                    |     0.9656      |
-| 19   |   1,5    |   "Basic" + some features of **high_importance**   |                    |   **0.9684**    |
+| 19   |   1,5    |   "Basic" + some features of **high_importance**   | 0.9863726922286226 |   **0.9684**    |
 
 ### Plot Importance of Features
 
