@@ -92,23 +92,35 @@ train_df=train_df.append(test_df)
 
 del test_df
 gc.collect()
-'''
-print('Extracting new features...')
-train_df['hour'] = pd.to_datetime(train_df.click_time).dt.hour.astype('uint8')
-train_df['day'] = pd.to_datetime(train_df.click_time).dt.day.astype('uint8')
-gc.collect()
-'''
-print('grouping by ip-day-hour combination...')
-gp = train_df[['ip', 'app', 'channel']].groupby(by=['app','channel'])[['ip']].count().reset_index().rename(index=str, columns={'ip': 'app_channel'})
-train_df = train_df.merge(gp, on=['app','channel'], how='left')
-del gp
-gc.collect()
 
-print('grouping by ip-day-hour combination...')
-gp = train_df[['ip', 'app', 'device', 'channel']].groupby(by=['app', 'device', 'channel'])[['ip']].count().reset_index().rename(index=str, columns={'ip': 'app_device_channel'})
-train_df = train_df.merge(gp, on=['app','channel', 'device'], how='left')
-del gp
-gc.collect()
+train_df['hour'] = pd.to_datetime(train_df.click_time).dt.hour.astype('uint8')
+
+features = ['ip', 'app','device','os', 'channel']
+predictors = ['ip', 'app','device','os', 'channel']
+for i in range(len(features)):
+    for j in range(i):
+        f1, f2 = features[i], features[j]
+        nf = '%s_%s' % (f1, f2)
+        predictors.append(nf)
+        print('grouping by ' + f1 + ' and ' + f2 + ' combination...')
+        gp = train_df[['hour', f1, f2]].groupby(by=[f1, f2])[
+            ['hour']].count().reset_index().rename(index=str, columns={'hour': nf})
+        train_df = train_df.merge(gp, on=[f1, f2], how='left')
+        del gp
+        gc.collect()
+
+for i in range(len(features)):
+    for j in range(i):
+        for k in range(j):
+            f1, f2, f3 = features[i], features[j], features[k]
+            nf = '%s_%s_%s' % (f1, f2, f3)
+            predictors.append(nf)
+            print('grouping by ' + f1 + ' ' + f2 + ' ' + f3 + ' combination...')
+            gp = train_df[['hour', f1, f2, f3]].groupby(by=[f1, f2, f3])[
+                ['hour']].count().reset_index().rename(index=str, columns={'hour': nf})
+            train_df = train_df.merge(gp, on=[f1, f2, f3], how='left')
+            del gp
+            gc.collect()
 
 test_df = train_df[len_train:]
 val_df = train_df[(len_train-5000000):len_train]
@@ -119,7 +131,7 @@ print("valid size: ", len(val_df))
 print("test size : ", len(test_df))
 
 target = 'is_attributed'
-predictors = ['ip', 'app','device','os', 'channel', 'app_channel', 'app_device_channel']
+
 categorical = ['ip', 'app', 'device', 'os', 'channel']
 
 sub = pd.DataFrame()
@@ -165,6 +177,6 @@ print("Predicting...")
 sub['is_attributed'] = bst.predict(test_df[predictors])
 print("writing...")
 sub = sub.sort_values(by='click_id')
-sub.to_csv('submission.csv',index=False)
+sub.to_csv('submission_all.csv',index=False)
 print("done...")
 
