@@ -85,7 +85,9 @@ eg: temporal interval
 
 ![2](https://gitee.com/TheodoreLee/TalkingData/raw/master/doc/img/features_importance_18.png)
 
-#### Num 19: 
+Select `device_ip`, `channel_app`, `app_ip`, `device`, `os_ip` to add into `Num3: "Basic" `.
+
+#### Num 19
 
 ![3](https://gitee.com/TheodoreLee/TalkingData/raw/master/doc/img/features_importance_19.png)
 
