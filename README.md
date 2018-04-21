@@ -79,17 +79,17 @@ eg: temporal interval
 
 #### Num 3: `"Basic"`
 
-![1](https://gitee.com/TheodoreLee/TalkingData/raw/master/doc/img/features_importance_3.png)
+![1](https://raw.githubusercontent.com/RMSnow/AdTracking/master/doc/img/features_importance_3.png)
 
 #### Num 18: `Basic + All two degree of features`
 
-![2](https://gitee.com/TheodoreLee/TalkingData/raw/master/doc/img/features_importance_18.png)
+![1](https://raw.githubusercontent.com/RMSnow/AdTracking/master/doc/img/features_importance_18.png)
 
 Select `device_ip`, `channel_app`, `app_ip`, `device`, `os_ip` to add into `Num3: "Basic" `.
 
 #### Num 19
 
-![3](https://gitee.com/TheodoreLee/TalkingData/raw/master/doc/img/features_importance_19.png)
+![1](https://raw.githubusercontent.com/RMSnow/AdTracking/master/doc/img/features_importance_19.png)
 
 ### Correlations of features
 
