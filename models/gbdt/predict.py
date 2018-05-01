@@ -80,6 +80,6 @@ bst.eval(xgtest,'test')
 print("Predicting...")
 sub['is_attributed'] = bst.predict(real_test_df[predictors])
 print("writing...")
-sub.to_csv(path + 'sub/sub_lgb_basic5.csv', index=False)
+sub.to_csv(path + 'sub/sub_lgb_basic7.csv', index=False)
 print("done...")
 '''

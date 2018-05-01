@@ -70,7 +70,7 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, dtest, predictors, target='target'
 
     # save model to file
     print('Save model...')
-    bst.save_model(path + 'model.txt')
+    bst.save_model(path + 'model/model_basic5.txt')
 
     # plotting
     print('Plot metrics during training...')
@@ -181,5 +181,5 @@ gc.collect()
 print("Predicting...")
 sub['is_attributed'] = bst.predict(real_test_df[predictors])
 print("writing...")
-sub.to_csv(path + 'sub_lgb_basic5.csv', index=False)
+sub.to_csv(path + 'sub/sub_lgb_basic5.csv', index=False)
 print("done...")
