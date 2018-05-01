@@ -53,27 +53,29 @@ eg: temporal interval
 
 ### Performance
 
-| Num  | Category |                      Features                      |   AUC on dev set   | AUC on test set |
-| ---- | :------: | :------------------------------------------------: | :----------------: | :-------------: |
-| 1    |    1     |                      Basic #5                      | 0.9774025893305988 |     0.9583      |
-| 2    |    1     |                  Basic #6 (hour)                   | 0.9765065318797589 |     0.9563      |
-| 3    |          |                      "Basic"                       | 0.974860783943336  |   **0.9684**    |
-| 4    |   1,2    |                     Add count                      | 0.9759619912016608 |                 |
-| 5    |   1,2    |                Add attributed count                | 0.9840863114093297 |     0.6239      |
-| 6    |   1,2    |      Add attributed count (no hour's effect)       | 0.9840863114093297 |     0.6114      |
-| 7    |   1,2    |           Add count and attributed count           | 0.9842108186300558 |                 |
-| 8    |   1,3    |                   Add Frequency                    | 0.9759619912016608 |                 |
-| 9    |  1,2,3   |       Add count, attributed count, frequency       | 0.9843591094736229 |                 |
-| 10   |   1,4    |             Add count, conversion rate             |                    |                 |
-| 11   | 1,2,3,4  | Add count, attributed count, frequency, conversion | 0.9842607399131638 |                 |
-| 12   |   1,6    |                   Add hour count                   | 0.975100704348888  |                 |
-| 13   |   1,6    |           Add hour attributed count auc            | 0.9952688459421872 |     0.7051      |
-| 14   |   1,5    |                   Add ip_channel                   | 0.979456127558631  |     0.9622      |
-| 15   |   1,5    |                  Add app_channel                   | 0.9783578247039497 |     0.9592      |
-| 16   |   1,5    |                   Add ip_device                    | 0.9801894479874732 |     0.9628      |
-| 17   |   1,5    |           Add All two degree of features           | 0.9813457066441867 |     0.9646      |
-| 18   |   1,5    |    Add All two degree of features(100,000,000)     |                    |     0.9656      |
-| 19   |   1,5    |   "Basic" + some features of **high_importance**   | 0.9863726922286226 |   **0.9684**    |
+| Num  | Category |                      Features                      |   AUC on dev set   | AUC on test set | AUC in Real World |
+| ---- | :------: | :------------------------------------------------: | :----------------: | :-------------: | :---------------: |
+| 1    |    1     |                      Basic #5                      | 0.9774025893305988 |                 |      0.9583       |
+| 2    |    1     |                  Basic #6 (hour)                   | 0.9765065318797589 |                 |      0.9563       |
+| 3    |          |                      "Basic"                       | 0.974860783943336  |                 |    **0.9684**     |
+| 4    |   1,2    |                     Add count                      | 0.9759619912016608 |                 |                   |
+| 5    |   1,2    |                Add attributed count                | 0.9840863114093297 |                 |      0.6239       |
+| 6    |   1,2    |      Add attributed count (no hour's effect)       | 0.9840863114093297 |                 |      0.6114       |
+| 7    |   1,2    |           Add count and attributed count           | 0.9842108186300558 |                 |                   |
+| 8    |   1,3    |                   Add Frequency                    | 0.9759619912016608 |                 |                   |
+| 9    |  1,2,3   |       Add count, attributed count, frequency       | 0.9843591094736229 |                 |                   |
+| 10   |   1,4    |             Add count, conversion rate             |                    |                 |                   |
+| 11   | 1,2,3,4  | Add count, attributed count, frequency, conversion | 0.9842607399131638 |                 |                   |
+| 12   |   1,6    |                   Add hour count                   | 0.975100704348888  |                 |                   |
+| 13   |   1,6    |           Add hour attributed count auc            | 0.9952688459421872 |                 |      0.7051       |
+| 14   |   1,5    |                   Add ip_channel                   | 0.979456127558631  |                 |      0.9622       |
+| 15   |   1,5    |                  Add app_channel                   | 0.9783578247039497 |                 |      0.9592       |
+| 16   |   1,5    |                   Add ip_device                    | 0.9801894479874732 |                 |      0.9628       |
+| 17   |   1,5    |           Add All two degree of features           | 0.9813457066441867 |                 |      0.9646       |
+| 18   |   1,5    |    Add All two degree of features(100,000,000)     |                    |                 |      0.9656       |
+| 19   |   1,5    |   "Basic" + some features of **high_importance**   | 0.9863726922286226 |                 |    **0.9684**     |
+
+**PS**: In `Basic#5`, `click_time` is transfered into `hour` and `day`.
 
 ### Plot Importance of Features
 
