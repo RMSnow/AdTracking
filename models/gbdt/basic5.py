@@ -131,11 +131,23 @@ print("valid size: ", len(val_df))
 print("test size : ", len(test_df))
 print("real world test size : ", len(real_test_df))
 
+
+# handle 'click_time'
+def handle_click_time(df):
+    df['hour'] = pd.to_datetime(df.click_time).dt.hour.astype('uint8')
+    df['day'] = pd.to_datetime(df.click_time).dt.day.astype('uint8')
+
+
+handle_click_time(train_df)
+handle_click_time(val_df)
+handle_click_time(test_df)
+handle_click_time(real_test_df)
+
 target = 'is_attributed'
-#  predictors = ['app', 'device', 'os', 'channel', 'hour', 'day']
+# predictors = ['app', 'device', 'os', 'channel', 'hour', 'day']
 # categorical = ['app', 'device', 'os', 'channel', 'hour', 'day']
-predictors = ['ip', 'app', 'device', 'os', 'channel', 'click_time']
-categorical = ['ip', 'app', 'device', 'os', 'channel']
+predictors = ['ip', 'app', 'device', 'os', 'channel', 'hour', 'day']
+categorical = ['ip', 'app', 'device', 'os', 'channel', 'hour', 'day']
 
 sub = pd.DataFrame()
 sub['click_id'] = real_test_df['click_id'].astype('int')
@@ -161,6 +173,7 @@ params = {
 bst = lgb_modelfit_nocv(params,
                         train_df,
                         val_df,
+                        test_df,
                         predictors,
                         target,
                         objective='binary',
