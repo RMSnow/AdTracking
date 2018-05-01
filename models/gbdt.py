@@ -12,14 +12,16 @@ import numpy as np
 import lightgbm as lgb
 import gc
 
+
 def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objective='binary', metrics='auc',
-                 feval=None, early_stopping_rounds=20, num_boost_round=3000, verbose_eval=10, categorical_features=None):
+                      feval=None, early_stopping_rounds=20, num_boost_round=3000, verbose_eval=10,
+                      categorical_features=None):
     lgb_params = {
         'boosting_type': 'gbdt',
         'objective': objective,
-        'metric':metrics,
+        'metric': metrics,
         'learning_rate': 0.01,
-        #'is_unbalance': 'true',  #because training data is unbalance (replaced with scale_pos_weight)
+        # 'is_unbalance': 'true',  #because training data is unbalance (replaced with scale_pos_weight)
         'num_leaves': 31,  # we should let it be smaller than 2^(max_depth)
         'max_depth': -1,  # -1 means no limit
         'min_child_samples': 20,  # Minimum number of data need in a child(min_data_in_leaf)
@@ -54,7 +56,7 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objec
     bst1 = lgb.train(lgb_params,
                      xgtrain,
                      valid_sets=[xgtrain, xgvalid],
-                     valid_names=['train','valid'],
+                     valid_names=['train', 'valid'],
                      evals_result=evals_results,
                      num_boost_round=num_boost_round,
                      early_stopping_rounds=early_stopping_rounds,
@@ -64,39 +66,42 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objec
     n_estimators = bst1.best_iteration
     print("\nModel Report")
     print("n_estimators : ", n_estimators)
-    print(metrics+":", evals_results['valid'][metrics][n_estimators-1])
+    print(metrics + ":", evals_results['valid'][metrics][n_estimators - 1])
 
     return bst1
+
 
 path = 'input/'
 
 dtypes = {
-        'ip'            : 'uint32',
-        'app'           : 'uint16',
-        'device'        : 'uint16',
-        'os'            : 'uint16',
-        'channel'       : 'uint16',
-        'is_attributed' : 'uint8',
-        'click_id'      : 'uint32',
-        'hour'          : 'uint8'
-        }
+    'ip': 'uint32',
+    'app': 'uint16',
+    'device': 'uint16',
+    'os': 'uint16',
+    'channel': 'uint16',
+    'is_attributed': 'uint8',
+    'click_id': 'uint32',
+    'hour': 'uint8'
+}
 
 print('loading train data...')
-train_df = pd.read_csv(path+"train_4e.csv", dtype=dtypes, usecols=['ip','app','device','os', 'channel', 'click_time', 'is_attributed'])
+train_df = pd.read_csv(path + "train_4e.csv", dtype=dtypes,
+                       usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'is_attributed'])
 
 print('loading test data...')
-test_df = pd.read_csv(path+"test.csv", dtype=dtypes, usecols=['ip','app','device','os', 'channel', 'click_time', 'click_id'])
+test_df = pd.read_csv(path + "test.csv", dtype=dtypes,
+                      usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'click_id'])
 
 len_train = len(train_df)
-train_df=train_df.append(test_df)
+train_df = train_df.append(test_df)
 
 del test_df
 gc.collect()
 
 train_df['hour'] = pd.to_datetime(train_df.click_time).dt.hour.astype('uint8')
 
-features = ['ip', 'app','device','os', 'channel']
-predictors = ['ip', 'app','device','os', 'channel']
+features = ['ip', 'app', 'device', 'os', 'channel']
+predictors = ['ip', 'app', 'device', 'os', 'channel']
 for i in range(len(features)):
     for j in range(i):
         f1, f2 = features[i], features[j]
@@ -123,8 +128,8 @@ for i in range(len(features)):
             gc.collect()
 
 test_df = train_df[len_train:]
-val_df = train_df[(len_train-5000000):len_train]
-train_df = train_df[:(len_train-5000000)]
+val_df = train_df[(len_train - 5000000):len_train]
+train_df = train_df[:(len_train - 5000000)]
 
 print("train size: ", len(train_df))
 print("valid size: ", len(val_df))
@@ -142,10 +147,9 @@ gc.collect()
 print("Training...")
 start_time = time.time()
 
-
 params = {
     'learning_rate': 0.15,
-    #'is_unbalance': 'true', # replaced with scale_pos_weight argument
+    # 'is_unbalance': 'true', # replaced with scale_pos_weight argument
     'num_leaves': 7,  # 2^max_depth - 1
     'max_depth': 3,  # -1 means no limit
     'min_child_samples': 100,  # Minimum number of data need in a child(min_data_in_leaf)
@@ -154,7 +158,7 @@ params = {
     'subsample_freq': 1,  # frequence of subsample, <=0 means no enable
     'colsample_bytree': 0.9,  # Subsample ratio of columns when constructing each tree.
     'min_child_weight': 0,  # Minimum sum of instance weight(hessian) needed in a child(leaf)
-    'scale_pos_weight':99 # because training data is extremely unbalanced
+    'scale_pos_weight': 99  # because training data is extremely unbalanced
 }
 bst = lgb_modelfit_nocv(params,
                         train_df,
@@ -177,6 +181,5 @@ print("Predicting...")
 sub['is_attributed'] = bst.predict(test_df[predictors])
 print("writing...")
 sub = sub.sort_values(by='click_id')
-sub.to_csv('submission_all.csv',index=False)
+sub.to_csv('submission_all.csv', index=False)
 print("done...")
-
