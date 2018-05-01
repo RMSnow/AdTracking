@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import time
+import datetime
 
 # sampling：
 # （1）把train.csv打乱，取4250w的数据
@@ -12,8 +13,11 @@ import time
 #     dev set：250w
 #     test set：250w
 
+# TODO: fix the size of data
+# set_size = np.array([3750, 250, 250])
+
 start_time = time.time()
-path = 'data/'
+path = '../../data/'
 
 
 def time_description(op):
@@ -22,7 +26,7 @@ def time_description(op):
 
 
 def handle_operation(op):
-    print("正在处理%s..." % op)
+    print("当前时间为：%s，正在处理%s..." % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), op))
 
 
 operation = "train.csv"

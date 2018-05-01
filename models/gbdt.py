@@ -84,6 +84,7 @@ dtypes = {
     'hour': 'uint8'
 }
 
+# TODO: path of file
 print('loading train data...')
 train_df = pd.read_csv(path + "train_4e.csv", dtype=dtypes,
                        usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'is_attributed'])
