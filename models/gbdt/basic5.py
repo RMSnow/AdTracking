@@ -127,16 +127,16 @@ def handle_click_time(df):
     df['day'] = pd.to_datetime(df.click_time).dt.day.astype('uint8')
 
 
-handle_click_time(train_df)
-handle_click_time(val_df)
-handle_click_time(test_df)
-handle_click_time(real_test_df)
+# handle_click_time(train_df)
+# handle_click_time(val_df)
+# handle_click_time(test_df)
+# handle_click_time(real_test_df)
 
 target = 'is_attributed'
 # predictors = ['app', 'device', 'os', 'channel', 'hour', 'day']
 # categorical = ['app', 'device', 'os', 'channel', 'hour', 'day']
-predictors = ['ip', 'app', 'device', 'os', 'channel', 'hour', 'day']
-categorical = ['ip', 'app', 'device', 'os', 'channel', 'hour', 'day']
+predictors = ['ip', 'app', 'device', 'os', 'channel']
+categorical = ['ip', 'app', 'device', 'os', 'channel']
 
 sub = pd.DataFrame()
 sub['click_id'] = real_test_df['click_id'].astype('int')
