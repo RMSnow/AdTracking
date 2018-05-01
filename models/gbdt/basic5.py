@@ -1,19 +1,15 @@
-"""
-This version has improvements based on new feature engg techniques observed from different kernels. Below are few of them:
-- https://www.kaggle.com/graf10a/lightgbm-lb-0-9675
-- https://www.kaggle.com/rteja1113/lightgbm-with-count-features?scriptVersionId=2815638
-- https://www.kaggle.com/nuhsikander/lgbm-new-features-corrected?scriptVersionId=2852561
-- https://www.kaggle.com/aloisiodn/lgbm-starter-early-stopping-0-9539 (Original script)
-"""
-
 import pandas as pd
 import time
 import numpy as np
+from sklearn.cross_validation import train_test_split
 import lightgbm as lgb
+import matplotlib.pyplot as plt
 import gc
 
+path = '../../data/'
 
-def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objective='binary', metrics='auc',
+
+def lgb_modelfit_nocv(params, dtrain, dvalid, dtest, predictors, target='target', objective='binary', metrics='auc',
                       feval=None, early_stopping_rounds=20, num_boost_round=3000, verbose_eval=10,
                       categorical_features=None):
     lgb_params = {
@@ -34,8 +30,9 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objec
         'min_split_gain': 0,  # lambda_l1, lambda_l2 and min_gain_to_split to regularization
         'reg_alpha': 0,  # L1 regularization term on weights
         'reg_lambda': 0,  # L2 regularization term on weights
-        'nthread': 12,
-        'verbose': 0
+        'nthread': 4,
+        'verbose': 0,
+        'metric': metrics
     }
 
     lgb_params.update(params)
@@ -50,28 +47,53 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, predictors, target='target', objec
                           feature_name=predictors,
                           categorical_feature=categorical_features
                           )
+    xgtest = lgb.Dataset(dtest[predictors].values, label=dtest[target].values,
+                         feature_name=predictors,
+                         categorical_feature=categorical_features
+                         )
 
     evals_results = {}
 
-    bst1 = lgb.train(lgb_params,
-                     xgtrain,
-                     valid_sets=[xgtrain, xgvalid],
-                     valid_names=['train', 'valid'],
-                     evals_result=evals_results,
-                     num_boost_round=num_boost_round,
-                     early_stopping_rounds=early_stopping_rounds,
-                     verbose_eval=10,
-                     feval=feval)
+    bst = lgb.train(lgb_params,
+                    xgtrain,
+                    valid_sets=[xgtrain, xgvalid, xgtest],
+                    valid_names=['train', 'valid', 'test'],
+                    evals_result=evals_results,
+                    num_boost_round=num_boost_round,
+                    early_stopping_rounds=early_stopping_rounds,
+                    verbose_eval=10,
+                    feval=feval)
 
-    n_estimators = bst1.best_iteration
+    n_estimators = bst.best_iteration
     print("\nModel Report")
     print("n_estimators : ", n_estimators)
     print(metrics + ":", evals_results['valid'][metrics][n_estimators - 1])
 
-    return bst1
+    # save model to file
+    print('Save model...')
+    bst.save_model(path + 'model.txt')
 
+    # plotting
+    print('Plot metrics during training...')
+    ax = lgb.plot_metric(evals_results)
+    plt.show()
 
-path = 'input/'
+    print('Plot feature importances...')
+    ax = lgb.plot_importance(bst, max_num_features=10)
+    plt.show()
+
+    print('Plot 84th tree...')  # one tree use categorical feature to split
+    ax = lgb.plot_tree(bst, tree_index=83, figsize=(20, 8), show_info=['split_gain'])
+    plt.show()
+
+    print('Plot 84th tree with graphviz...')
+    graph = lgb.create_tree_digraph(bst, tree_index=83, name='Tree84')
+    graph.render(view=True)
+
+    # ax = lgb.plot_importance(bst)
+    # plt.gcf().savefig('features_importance_kernel2.png')
+    return bst
+
 
 dtypes = {
     'ip': 'uint32',
@@ -80,68 +102,43 @@ dtypes = {
     'os': 'uint16',
     'channel': 'uint16',
     'is_attributed': 'uint8',
-    'click_id': 'uint32',
-    'hour': 'uint8'
+    'click_id': 'uint32'
 }
 
-# TODO: path of file
+# dev_250w.csv
+# test_250w.csv
+# train_3750w.csv
+# data_shuffled_4250w.csv
+
 print('loading train data...')
-train_df = pd.read_csv(path + "train_4e.csv", dtype=dtypes,
+train_df = pd.read_csv(path + "train_3750w.csv", dtype=dtypes,
                        usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'is_attributed'])
 
+print('loading valid data...')
+val_df = pd.read_csv(path + "dev_250w.csv", dtype=dtypes,
+                     usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'is_attributed'])
+
 print('loading test data...')
-test_df = pd.read_csv(path + "test.csv", dtype=dtypes,
-                      usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'click_id'])
+test_df = pd.read_csv(path + "test_250w.csv", dtype=dtypes,
+                      usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'is_attributed'])
 
-len_train = len(train_df)
-train_df = train_df.append(test_df)
-
-del test_df
-gc.collect()
-
-train_df['hour'] = pd.to_datetime(train_df.click_time).dt.hour.astype('uint8')
-
-features = ['ip', 'app', 'device', 'os', 'channel']
-predictors = ['ip', 'app', 'device', 'os', 'channel']
-for i in range(len(features)):
-    for j in range(i):
-        f1, f2 = features[i], features[j]
-        nf = '%s_%s' % (f1, f2)
-        predictors.append(nf)
-        print('grouping by ' + f1 + ' and ' + f2 + ' combination...')
-        gp = train_df[['hour', f1, f2]].groupby(by=[f1, f2])[
-            ['hour']].count().reset_index().rename(index=str, columns={'hour': nf})
-        train_df = train_df.merge(gp, on=[f1, f2], how='left')
-        del gp
-        gc.collect()
-
-for i in range(len(features)):
-    for j in range(i):
-        for k in range(j):
-            f1, f2, f3 = features[i], features[j], features[k]
-            nf = '%s_%s_%s' % (f1, f2, f3)
-            predictors.append(nf)
-            print('grouping by ' + f1 + ' ' + f2 + ' ' + f3 + ' combination...')
-            gp = train_df[['hour', f1, f2, f3]].groupby(by=[f1, f2, f3])[
-                ['hour']].count().reset_index().rename(index=str, columns={'hour': nf})
-            train_df = train_df.merge(gp, on=[f1, f2, f3], how='left')
-            del gp
-            gc.collect()
-
-test_df = train_df[len_train:]
-val_df = train_df[(len_train - 5000000):len_train]
-train_df = train_df[:(len_train - 5000000)]
+print('loading real world test data...')
+real_test_df = pd.read_csv(path + "test.csv", dtype=dtypes,
+                           usecols=['ip', 'app', 'device', 'os', 'channel', 'click_time', 'click_id'])
 
 print("train size: ", len(train_df))
 print("valid size: ", len(val_df))
 print("test size : ", len(test_df))
+print("real world test size : ", len(real_test_df))
 
 target = 'is_attributed'
-
+#  predictors = ['app', 'device', 'os', 'channel', 'hour', 'day']
+# categorical = ['app', 'device', 'os', 'channel', 'hour', 'day']
+predictors = ['ip', 'app', 'device', 'os', 'channel', 'click_time']
 categorical = ['ip', 'app', 'device', 'os', 'channel']
 
 sub = pd.DataFrame()
-sub['click_id'] = test_df['click_id'].astype('int')
+sub['click_id'] = real_test_df['click_id'].astype('int')
 
 gc.collect()
 
@@ -176,11 +173,11 @@ bst = lgb_modelfit_nocv(params,
 print('[{}]: model training time'.format(time.time() - start_time))
 del train_df
 del val_df
+del test_df
 gc.collect()
 
 print("Predicting...")
-sub['is_attributed'] = bst.predict(test_df[predictors])
+sub['is_attributed'] = bst.predict(real_test_df[predictors])
 print("writing...")
-sub = sub.sort_values(by='click_id')
-sub.to_csv('submission_all.csv', index=False)
+sub.to_csv('sub_lgb_basic5.csv', index=False)
 print("done...")
