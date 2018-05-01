@@ -1,7 +1,6 @@
 import pandas as pd
 import time
 import numpy as np
-from sklearn.cross_validation import train_test_split
 import lightgbm as lgb
 import matplotlib.pyplot as plt
 import gc
@@ -82,16 +81,6 @@ def lgb_modelfit_nocv(params, dtrain, dvalid, dtest, predictors, target='target'
     ax = lgb.plot_importance(bst, max_num_features=10)
     plt.show()
 
-    print('Plot 84th tree...')  # one tree use categorical feature to split
-    ax = lgb.plot_tree(bst, tree_index=83, figsize=(20, 8), show_info=['split_gain'])
-    plt.show()
-
-    print('Plot 84th tree with graphviz...')
-    graph = lgb.create_tree_digraph(bst, tree_index=83, name='Tree84')
-    graph.render(view=True)
-
-    # ax = lgb.plot_importance(bst)
-    # plt.gcf().savefig('features_importance_kernel2.png')
     return bst
 
 
@@ -192,5 +181,5 @@ gc.collect()
 print("Predicting...")
 sub['is_attributed'] = bst.predict(real_test_df[predictors])
 print("writing...")
-sub.to_csv('sub_lgb_basic5.csv', index=False)
+sub.to_csv(path + 'sub_lgb_basic5.csv', index=False)
 print("done...")
